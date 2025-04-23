@@ -42,34 +42,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := TUT_F4_AUDIO_I2S
+BUILD_ARTIFACT_NAME := EugenioProyect
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-TUT_F4_AUDIO_I2S.elf \
+EugenioProyect.elf \
 
 MAP_FILES += \
-TUT_F4_AUDIO_I2S.map \
+EugenioProyect.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-TUT_F4_AUDIO_I2S.list \
+EugenioProyect.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: TUT_F4_AUDIO_I2S.elf secondary-outputs
+main-build: EugenioProyect.elf secondary-outputs
 
 # Tool invocations
-TUT_F4_AUDIO_I2S.elf TUT_F4_AUDIO_I2S.map: $(OBJS) $(USER_OBJS) C:\Users\cuenc\OneDrive\Escritorio\Mateo\UCC\Eugenio\EugenioProyect\STM32F411VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "TUT_F4_AUDIO_I2S.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\cuenc\OneDrive\Escritorio\Mateo\UCC\Eugenio\EugenioProyect\STM32F411VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TUT_F4_AUDIO_I2S.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+EugenioProyect.elf EugenioProyect.map: $(OBJS) $(USER_OBJS) C:\Users\cuenc\OneDrive\Escritorio\Mateo\UCC\Eugenio\EugenioProyect\STM32F411VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "EugenioProyect.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\cuenc\OneDrive\Escritorio\Mateo\UCC\Eugenio\EugenioProyect\STM32F411VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="EugenioProyect.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -78,14 +78,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-TUT_F4_AUDIO_I2S.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "TUT_F4_AUDIO_I2S.list"
+EugenioProyect.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "EugenioProyect.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) TUT_F4_AUDIO_I2S.elf TUT_F4_AUDIO_I2S.list TUT_F4_AUDIO_I2S.map default.size.stdout
+	-$(RM) EugenioProyect.elf EugenioProyect.list EugenioProyect.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
