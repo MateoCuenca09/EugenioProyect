@@ -29,8 +29,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- ../FATFS/App/fatfs.h ../Middlewares/Third_Party/FatFs/src/ff.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h ../Core/Inc/dma.h \
+ ../Core/Inc/main.h ../FATFS/App/fatfs.h \
+ ../Middlewares/Third_Party/FatFs/src/ff.h \
  ../Middlewares/Third_Party/FatFs/src/integer.h ../FATFS/Target/ffconf.h \
  ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
  ../USB_HOST/Target/usbh_conf.h \
@@ -45,9 +46,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h \
  ../Middlewares/Third_Party/FatFs/src/diskio.h \
  ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/usbh_diskio.h \
- ../USB_HOST/App/usb_host.h ../Core/Inc/waveplayer.h ../Core/Inc/main.h \
- ../Core/Inc/File_Handling.h ../Core/Inc/fonts.h \
- ../Core/Inc/ssd1306_oled.h ../Core/Inc/fonts.h ../Core/Inc/display.h
+ ../Core/Inc/i2c.h ../Core/Inc/i2s.h ../USB_HOST/App/usb_host.h \
+ ../Core/Inc/gpio.h ../Core/Inc/waveplayer.h ../Core/Inc/File_Handling.h \
+ ../Core/Inc/fonts.h ../Core/Inc/ssd1306_oled.h ../Core/Inc/fonts.h \
+ ../Core/Inc/display.h ../Core/Inc/parlantes.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -80,6 +82,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
+../Core/Inc/dma.h:
+../Core/Inc/main.h:
 ../FATFS/App/fatfs.h:
 ../Middlewares/Third_Party/FatFs/src/ff.h:
 ../Middlewares/Third_Party/FatFs/src/integer.h:
@@ -98,11 +102,14 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Middlewares/Third_Party/FatFs/src/diskio.h:
 ../Middlewares/Third_Party/FatFs/src/ff.h:
 ../FATFS/Target/usbh_diskio.h:
+../Core/Inc/i2c.h:
+../Core/Inc/i2s.h:
 ../USB_HOST/App/usb_host.h:
+../Core/Inc/gpio.h:
 ../Core/Inc/waveplayer.h:
-../Core/Inc/main.h:
 ../Core/Inc/File_Handling.h:
 ../Core/Inc/fonts.h:
 ../Core/Inc/ssd1306_oled.h:
 ../Core/Inc/fonts.h:
 ../Core/Inc/display.h:
+../Core/Inc/parlantes.h:

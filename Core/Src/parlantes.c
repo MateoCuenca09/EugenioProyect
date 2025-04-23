@@ -10,12 +10,12 @@
 
 // Definí los parlantes y sus pines
 Parlante parlantes[NUM_PARLANTES] = {
-    {GPIOC, sel_1_b_Pin},  // Parlante 1
-    {GPIOC, sel_1_a_Pin},  // Parlante 2
-    {GPIOA, sel_2_a_Pin},  // Parlante 3
-    {GPIOA, sel_2_b_Pin},  // Parlante 4
-    {GPIOA, sel_3_a_Pin},  // Parlante 5
-    {GPIOA, sel_3_b_Pin},  // Parlante 6
+    {GPIOC, PC1_Pin},  // Parlante 1
+    {GPIOC, PC3_Pin},  // Parlante 2
+    {GPIOA, PA1_Pin},  // Parlante 3
+    {GPIOA, PA3_Pin},  // Parlante 4
+    {GPIOA, PA5_Pin},  // Parlante 5
+    {GPIOA, PA7_Pin},  // Parlante 6
 
 };
 

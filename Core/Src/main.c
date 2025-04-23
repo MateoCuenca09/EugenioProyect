@@ -120,10 +120,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_GPIO_WritePin(GPIOC,sel_1_a_Pin,GPIO_PIN_RESET );
-	  HAL_GPIO_WritePin(GPIOC,sel_1_b_Pin, GPIO_PIN_RESET);
-	  HAL_GPIO_WritePin(GPIOA, sel_3_b_Pin|sel_3_a_Pin|sel_2_b_Pin|sel_2_a_Pin, GPIO_PIN_RESET);
-	  HAL_GPIO_WritePin(GPIOA, sel_2_b_Pin, GPIO_PIN_RESET);
 
     /* USER CODE END WHILE */
     MX_USB_HOST_Process();

@@ -1,0 +1,2 @@
+../Core/Src/parlantes.c:23:6:Parlantes_Init	0	static
+../Core/Src/parlantes.c:25:6:Activar_Parlante	16	static
