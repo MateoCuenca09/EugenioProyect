@@ -1357,7 +1357,7 @@ Disassembly of section .text:
  8000e54:	a905      	add	r1, sp, #20
  8000e56:	4640      	mov	r0, r8
  8000e58:	e9cd 3505 	strd	r3, r5, [sp, #20]
- 8000e5c:	e9cd 4407 	strd	r4, r4, [sp, #28]
+ 8000e5c:	e9cd 5407 	strd	r5, r4, [sp, #28]
  8000e60:	f000 fecc 	bl	8001bfc <HAL_GPIO_Init>
  8000e64:	2302      	movs	r3, #2
  8000e66:	a905      	add	r1, sp, #20
@@ -1369,7 +1369,7 @@ Disassembly of section .text:
  8000e76:	a905      	add	r1, sp, #20
  8000e78:	4630      	mov	r0, r6
  8000e7a:	e9cd 3505 	strd	r3, r5, [sp, #20]
- 8000e7e:	e9cd 4407 	strd	r4, r4, [sp, #28]
+ 8000e7e:	e9cd 5407 	strd	r5, r4, [sp, #28]
  8000e82:	f000 febb 	bl	8001bfc <HAL_GPIO_Init>
  8000e86:	4622      	mov	r2, r4
  8000e88:	4621      	mov	r1, r4
