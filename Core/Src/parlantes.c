@@ -25,9 +25,9 @@ void Parlantes_Init(void) {}
 void Activar_Parlante(uint8_t numero) {
     for (int i = 0; i < NUM_PARLANTES; i++) {
         if (i == (numero)) {
-            HAL_GPIO_WritePin(parlantes[i].puerto, parlantes[i].pin, GPIO_PIN_SET);
-        } else {
             HAL_GPIO_WritePin(parlantes[i].puerto, parlantes[i].pin, GPIO_PIN_RESET);
+        } else {
+            HAL_GPIO_WritePin(parlantes[i].puerto, parlantes[i].pin, GPIO_PIN_SET);
         }
     }
 }

@@ -130,6 +130,7 @@ int main(void)
 	    {
 	    	Mount_USB();
 	    	AUDIO_PLAYER_Start(idx);
+	    	Activar_Parlante(idS);
 	    	while (1)
 	    	{
 	    		AUDIO_PLAYER_Process(TRUE,idx);
@@ -149,7 +150,7 @@ int main(void)
 	    		{
 	    			idS = idS + 1;
 	    			/* Control de indice */
-	    			if(idS>NUM_PARLANTES)
+	    			if(idS>NUM_PARLANTES - 1)
 	    			{
 	    				idS = 0;
 	    			}
