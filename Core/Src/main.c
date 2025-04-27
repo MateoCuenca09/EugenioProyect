@@ -23,6 +23,7 @@
 #include "fatfs.h"
 #include "i2c.h"
 #include "i2s.h"
+#include "usart.h"
 #include "usb_host.h"
 #include "gpio.h"
 
@@ -112,6 +113,7 @@ int main(void)
   MX_FATFS_Init();
   MX_USB_HOST_Init();
   MX_I2C2_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
