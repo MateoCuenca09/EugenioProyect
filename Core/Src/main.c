@@ -23,6 +23,7 @@
 #include "fatfs.h"
 #include "i2c.h"
 #include "i2s.h"
+#include "usart.h"
 #include "usb_host.h"
 #include "gpio.h"
 
@@ -70,11 +71,11 @@ extern AUDIO_PLAYBACK_StateTypeDef AudioState;
 /* USER CODE BEGIN 0 */
 char buf_oled[20];
 int IsFinished = 0;
-bool next_song, next_speaker = false;
+bool next_song, prev_song, next_speaker, prev_speaker = false;
 int8_t idx = 0; /* Indice de archivos */
 int8_t idS = 0; /* Indice de Parlantes */
 
-uint8_t cantidad_wavs = 1; /* Cantidad de archivos a reproducir */
+uint8_t cantidad_wavs = 3; /* Cantidad de archivos a reproducir */
 
 /* USER CODE END 0 */
 
@@ -112,6 +113,7 @@ int main(void)
   MX_FATFS_Init();
   MX_USB_HOST_Init();
   MX_I2C2_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -126,40 +128,70 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	    if (Appli_state == APPLICATION_READY)
-	    {
-	    	Mount_USB();
-	    	AUDIO_PLAYER_Start(idx);
-	    	Activar_Parlante(idS);
-	    	while (1)
-	    	{
-	    		AUDIO_PLAYER_Process(TRUE,idx);
+   	    if (Appli_state == APPLICATION_READY)
+   	    {
+   	    	Mount_USB();
+   	    	AUDIO_PLAYER_Start(idx);
+   	    	Activar_Parlante(idS);
+   	    	while (1)
+   	    	{
+   	    		AUDIO_PLAYER_Process(TRUE,idx);
 
-	    		if (next_song)
-	    		{
-	    			idx = idx + 1;
-	    			/* Control de indice */
-	    			if(idx>(cantidad_wavs-1))
-	    			{
-	    				idx = 0;
-	    			}
-	    			next_song = false;
-	    		};
+   	    		if (next_song)
+   	    		{
+   	    			idx = idx + 1;
+   	    			/* Control de indice */
+   	    			if(idx>(cantidad_wavs-1))
+   	    			{
+   	    				idx = 0;
+   	    			}
+   	    			AudioState = AUDIO_STATE_NEXT;
+   	    			next_song = false;
+   	    			HAL_Delay(200);
+   	    		};
 
-	    		if (next_speaker)
-	    		{
-	    			idS = idS + 1;
-	    			/* Control de indice */
-	    			if(idS>NUM_PARLANTES - 1)
-	    			{
-	    				idS = 0;
-	    			}
-	    			Activar_Parlante(idS);
-	    			next_speaker = false;
-	    		}
-	    	}
-	    }
-  }
+   	    		if (next_speaker)
+   	    		{
+   	    			idS = idS + 1;
+   	    			/* Control de indice */
+   	    			if(idS>NUM_PARLANTES - 1)
+   	    			{
+   	    				idS = 0;
+   	    			}
+   	    			Activar_Parlante(idS);
+   	    			next_speaker = false;
+   	    			HAL_Delay(200);
+   	    		}
+
+   	    		if (prev_song)
+   	    		{
+   	    			idx = idx - 1;
+   	    			/* Control de indice */
+   	    			if(idx<0)
+   	    			{
+   	    				idx = cantidad_wavs-1;
+   	    			}
+   	    			AudioState = AUDIO_STATE_PREVIOUS;
+   	    			next_song = false;
+   	    			HAL_Delay(200);
+   	    		};
+
+   	    		if (prev_speaker)
+   	    		{
+   	    			idS = idS - 1;
+   	    			/* Control de indice */
+   	    			if(idS<0)
+   	    			{
+   	    				idS = NUM_PARLANTES - 1;
+   	    			}
+   	    			Activar_Parlante(idS);
+   	    			next_speaker = false;
+   	    			HAL_Delay(200);
+   	    		}
+
+   	    	}
+   	    }
+     }
   /* USER CODE END 3 */
 }
 
@@ -213,14 +245,24 @@ void SystemClock_Config(void)
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 
-	if (GPIO_Pin == GPIO_PIN_2)
+	if (GPIO_Pin == PD15_Pin)
 	{
 		next_song = true;
 	}
 
-	if (GPIO_Pin == GPIO_PIN_6)
+	if (GPIO_Pin == PD13_Pin)
 	{
 		next_speaker = true;
+	}
+
+	if (GPIO_Pin == PD11_Pin)
+	{
+		prev_song = true;
+	}
+
+	if (GPIO_Pin == PD9_Pin)
+	{
+		prev_speaker = true;
 	}
 }
 /* USER CODE END 4 */
