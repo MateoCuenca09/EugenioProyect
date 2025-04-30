@@ -6,6 +6,8 @@
 
 void display_Init(void)
 {
+	//Iniciamos Pantalla//
+	SSD1306_Init();
 	// MENSAJES INICIO //
 	SSD1306_GotoXY(5,0);
 	SSD1306_Puts("HOLA, BIENVENIDO!", &Font_7x10, WHITE);
@@ -39,7 +41,7 @@ void display_Init(void)
 	SSD1306_GotoXY(8,25);
 	SSD1306_Puts("Reproduciendo...", &Font_7x10, WHITE);
 	SSD1306_GotoXY(18,40);
-	SSD1306_Puts("* Normal 60bpm", &Font_7x10, WHITE);
+	SSD1306_Puts("* Musica canal derecho", &Font_7x10, WHITE);
 	SSD1306_UpdateScreen();
 }
 
@@ -55,7 +57,7 @@ void display_cancion(int idx)
 		SSD1306_GotoXY(8,25);
 		SSD1306_Puts("Reproduciendo...", &Font_7x10, WHITE);
 		SSD1306_GotoXY(18,40);
-		SSD1306_Puts("* Normal 60bpm", &Font_7x10, WHITE);
+		SSD1306_Puts("* Musica canal derecho", &Font_7x10, WHITE);
 		SSD1306_UpdateScreen();
 		HAL_Delay(200);
 		break;
@@ -69,7 +71,7 @@ void display_cancion(int idx)
 		SSD1306_GotoXY(8,25);
 		SSD1306_Puts("Reproduciendo...", &Font_7x10, WHITE);
 		SSD1306_GotoXY(18,40);
-		SSD1306_Puts("* Murmullo 60bpm", &Font_7x10, WHITE);
+		SSD1306_Puts("* Musica dos canales", &Font_7x10, WHITE);
 		SSD1306_UpdateScreen();
 		HAL_Delay(200);
 		break;
@@ -81,7 +83,7 @@ void display_cancion(int idx)
 		SSD1306_GotoXY(8,25);
 		SSD1306_Puts("Reproduciendo...", &Font_7x10, WHITE);
 		SSD1306_GotoXY(18,40);
-		SSD1306_Puts("* Estereo ", &Font_7x10, WHITE);
+		SSD1306_Puts("* Normal y Murmullo ", &Font_7x10, WHITE);
 		SSD1306_UpdateScreen();
 		break;
 

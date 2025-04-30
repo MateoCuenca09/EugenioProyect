@@ -69,7 +69,6 @@ extern AUDIO_PLAYBACK_StateTypeDef AudioState;
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-char buf_oled[20];
 int IsFinished = 0;
 bool next_song, prev_song, next_speaker, prev_speaker = false;
 int8_t idx = 0; /* Indice de archivos */
@@ -112,10 +111,8 @@ int main(void)
   MX_I2S3_Init();
   MX_FATFS_Init();
   MX_USB_HOST_Init();
-  MX_I2C2_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -125,6 +122,7 @@ int main(void)
 
     /* USER CODE END WHILE */
     MX_USB_HOST_Process();
+    display_Init();
 
     /* USER CODE BEGIN 3 */
 
@@ -147,6 +145,7 @@ int main(void)
    	    			}
    	    			AudioState = AUDIO_STATE_NEXT;
    	    			next_song = false;
+   	    			display_cancion(idx);
    	    			HAL_Delay(200);
    	    		};
 
@@ -160,6 +159,7 @@ int main(void)
    	    			}
    	    			Activar_Parlante(idS);
    	    			next_speaker = false;
+   	    			display_cancion(idx);
    	    			HAL_Delay(200);
    	    		}
 
@@ -173,10 +173,12 @@ int main(void)
    	    			}
    	    			AudioState = AUDIO_STATE_PREVIOUS;
    	    			next_song = false;
+   	    			display_cancion(idx);
    	    			HAL_Delay(200);
    	    		};
 
    	    		if (prev_speaker)
+
    	    		{
    	    			idS = idS - 1;
    	    			/* Control de indice */
@@ -186,6 +188,7 @@ int main(void)
    	    			}
    	    			Activar_Parlante(idS);
    	    			next_speaker = false;
+   	    			display_cancion(idx);
    	    			HAL_Delay(200);
    	    		}
 

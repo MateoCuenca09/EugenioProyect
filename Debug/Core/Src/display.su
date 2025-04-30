@@ -1,2 +1,2 @@
 ../Core/Src/display.c:7:6:display_Init	8	static
-../Core/Src/display.c:46:6:display_cancion	16	static
+../Core/Src/display.c:48:6:display_cancion	16	static
