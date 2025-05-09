@@ -78,7 +78,7 @@ a) PLAY A FILE:
       The Callback functions are named BSP_AUDIO_OUT_XXXCallBack() and only their prototypes are declared in 
       the stm32f411e_discovery_audio.h file. (refer to the example for more details on the callbacks implementations)
    + To Stop playing, to modify the volume level, the frequency or to mute, use the functions
-       BSP_AUDIO_OUT_Stop(), BSP_AUDIO_OUT_SetVolume(), AUDIO_OUT_SetFrequency() BSP_AUDIO_OUT_SetOutputMode and BSP_AUDIO_OUT_SetMute().
+       BSP_(), BSP_AUDIO_OUT_SetVolume(), AUDIO_OUT_SetFrequency() BSP_AUDIO_OUT_SetOutputMode and BSP_AUDIO_OUT_SetMute().
    + The driver API and the callback functions are at the end of the stm32f411e_discovery_audio.h file.
    
 Driver architecture:

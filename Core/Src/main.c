@@ -107,12 +107,13 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_I2C1_Init();
   MX_I2S3_Init();
   MX_FATFS_Init();
   MX_USB_HOST_Init();
   MX_USART1_UART_Init();
+  MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
+  SSD1306_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -122,7 +123,6 @@ int main(void)
 
     /* USER CODE END WHILE */
     MX_USB_HOST_Process();
-    display_Init();
 
     /* USER CODE BEGIN 3 */
 
@@ -137,17 +137,17 @@ int main(void)
 
    	    		if (next_song)
    	    		{
+   	    			AudioState = AUDIO_STATE_PAUSE;
    	    			idx = idx + 1;
    	    			/* Control de indice */
    	    			if(idx>(cantidad_wavs-1))
    	    			{
    	    				idx = 0;
    	    			}
-   	    			AudioState = AUDIO_STATE_NEXT;
    	    			next_song = false;
    	    			display_cancion(idx);
-   	    			HAL_Delay(200);
-   	    		};
+   	    			AudioState = AUDIO_STATE_NEXT;
+      	    		};
 
    	    		if (next_speaker)
    	    		{
@@ -160,7 +160,7 @@ int main(void)
    	    			Activar_Parlante(idS);
    	    			next_speaker = false;
    	    			display_cancion(idx);
-   	    			HAL_Delay(200);
+   	    			AudioState = AUDIO_STATE_PLAY;
    	    		}
 
    	    		if (prev_song)
@@ -172,9 +172,8 @@ int main(void)
    	    				idx = cantidad_wavs-1;
    	    			}
    	    			AudioState = AUDIO_STATE_PREVIOUS;
-   	    			next_song = false;
+   	    			prev_song = false;
    	    			display_cancion(idx);
-   	    			HAL_Delay(200);
    	    		};
 
    	    		if (prev_speaker)
@@ -187,9 +186,8 @@ int main(void)
    	    				idS = NUM_PARLANTES - 1;
    	    			}
    	    			Activar_Parlante(idS);
-   	    			next_speaker = false;
+   	    			prev_speaker = false;
    	    			display_cancion(idx);
-   	    			HAL_Delay(200);
    	    		}
 
    	    	}
@@ -260,12 +258,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	if (GPIO_Pin == PD11_Pin)
 	{
-		prev_song = true;
+		prev_speaker = true;
 	}
 
 	if (GPIO_Pin == PD9_Pin)
 	{
-		prev_speaker = true;
+		prev_song = true;
 	}
 }
 /* USER CODE END 4 */

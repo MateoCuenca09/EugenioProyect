@@ -68,7 +68,7 @@
 #include "File_Handling.h"
 #include "AUDIO.h"
 
-static uint32_t uwVolume = 50;  // between 0 to 100
+static uint32_t uwVolume = 55;  // between 0 to 100
 
 
 /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NO CHANGES AFTER THIS <<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
@@ -209,6 +209,7 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
     }
     AUDIO_OUT_Stop(CODEC_PDWN_SW);
     AUDIO_PLAYER_Start(FilePos);
+	AUDIO_OUT_SetVolume(uwVolume);
     break;    
     
   case AUDIO_STATE_PREVIOUS:
@@ -248,6 +249,14 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
     AudioState = AUDIO_STATE_PLAY;
     break;
     
+  case AUDIO_STATE_MUTE:
+	AUDIO_OUT_SetVolume(0);
+    AudioState = AUDIO_STATE_PLAY;
+
+  case AUDIO_STATE_SET_VOLUME:
+	AUDIO_OUT_SetVolume(uwVolume);
+    AudioState = AUDIO_STATE_PLAY;
+
   case AUDIO_STATE_WAIT:
   case AUDIO_STATE_IDLE:
   case AUDIO_STATE_INIT:    

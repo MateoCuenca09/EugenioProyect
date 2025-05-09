@@ -41,7 +41,9 @@ void display_Init(void)
 	SSD1306_GotoXY(8,25);
 	SSD1306_Puts("Reproduciendo...", &Font_7x10, WHITE);
 	SSD1306_GotoXY(18,40);
-	SSD1306_Puts("* Musica canal derecho", &Font_7x10, WHITE);
+	SSD1306_Puts("* CD:Musica ", &Font_7x10, WHITE);
+	SSD1306_GotoXY(18,50);
+	SSD1306_Puts("* CI:Silencio ", &Font_7x10, WHITE);
 	SSD1306_UpdateScreen();
 }
 
@@ -51,29 +53,29 @@ void display_cancion(int idx)
 
 	case 0:
 		SSD1306_Clear();
-		HAL_Delay(200);
 		SSD1306_GotoXY(30,0);
 		SSD1306_Puts("STATUS", &Font_11x18, WHITE);
 		SSD1306_GotoXY(8,25);
 		SSD1306_Puts("Reproduciendo...", &Font_7x10, WHITE);
 		SSD1306_GotoXY(18,40);
-		SSD1306_Puts("* Musica canal derecho", &Font_7x10, WHITE);
+		SSD1306_Puts("* CD:Musica ", &Font_7x10, WHITE);
+		SSD1306_GotoXY(18,50);
+		SSD1306_Puts("* CI:Silencio ", &Font_7x10, WHITE);
 		SSD1306_UpdateScreen();
-		HAL_Delay(200);
 		break;
 
 
 	case 1:
 		SSD1306_Clear();
-		HAL_Delay(200);
 		SSD1306_GotoXY(30,0);
 		SSD1306_Puts("STATUS", &Font_11x18, WHITE);
 		SSD1306_GotoXY(8,25);
 		SSD1306_Puts("Reproduciendo...", &Font_7x10, WHITE);
 		SSD1306_GotoXY(18,40);
-		SSD1306_Puts("* Musica dos canales", &Font_7x10, WHITE);
+		SSD1306_Puts("* CD:Electronica", &Font_7x10, WHITE);
+		SSD1306_GotoXY(18,50);
+		SSD1306_Puts("* CI:The Strokes", &Font_7x10, WHITE);
 		SSD1306_UpdateScreen();
-		HAL_Delay(200);
 		break;
 
 	case 2:
@@ -83,7 +85,9 @@ void display_cancion(int idx)
 		SSD1306_GotoXY(8,25);
 		SSD1306_Puts("Reproduciendo...", &Font_7x10, WHITE);
 		SSD1306_GotoXY(18,40);
-		SSD1306_Puts("* Normal y Murmullo ", &Font_7x10, WHITE);
+		SSD1306_Puts("* CD:Murmullo ", &Font_7x10, WHITE);
+		SSD1306_GotoXY(18,50);
+		SSD1306_Puts("* CI:Normal ", &Font_7x10, WHITE);
 		SSD1306_UpdateScreen();
 		break;
 
