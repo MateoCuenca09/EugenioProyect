@@ -65,6 +65,9 @@ void MX_USB_HOST_Process(void);
 /* USER CODE BEGIN PFP */
 extern ApplicationTypeDef Appli_state;
 extern AUDIO_PLAYBACK_StateTypeDef AudioState;
+extern UART_HandleTypeDef huart1;
+uint8_t uart_rx_byte = 0;
+volatile bool uart_cmd_received = false;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -75,6 +78,7 @@ int8_t idx = 0; /* Indice de archivos */
 int8_t idS = 0; /* Indice de Parlantes */
 
 uint8_t cantidad_wavs = 3; /* Cantidad de archivos a reproducir */
+
 
 /* USER CODE END 0 */
 
@@ -114,6 +118,8 @@ int main(void)
   MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
   SSD1306_Init();
+  HAL_UART_Receive_IT(&huart1, &uart_rx_byte, 1);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -130,10 +136,28 @@ int main(void)
    	    {
    	    	Mount_USB();
    	    	AUDIO_PLAYER_Start(idx);
+   	    	display_cancion(idx);
    	    	Activar_Parlante(idS);
    	    	while (1)
    	    	{
    	    		AUDIO_PLAYER_Process(TRUE,idx);
+
+
+   	    		if (uart_cmd_received)
+   	    		{
+   	    		    uart_cmd_received = false;
+
+   	    		    if (uart_rx_byte >= '0' && uart_rx_byte <= '9')
+   	    		    {
+   	    		        int nuevo_idx = uart_rx_byte - '0';
+   	    		        if (nuevo_idx < cantidad_wavs)
+   	    		        {
+   	    		            idx = nuevo_idx;
+   	    		            AudioState = AUDIO_STATE_NEXT;
+   	    		            display_cancion(idx);
+   	    		        }
+   	    		    }
+   	    		}
 
    	    		if (next_song)
    	    		{
@@ -242,6 +266,17 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == USART1)  // Cambiá esto si usás otro UART
+    {
+        uart_cmd_received = true;
+
+        // Reinicia la recepción para recibir el próximo byte
+        HAL_UART_Receive_IT(&huart1, &uart_rx_byte, 1);
+    }
+}
+
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
