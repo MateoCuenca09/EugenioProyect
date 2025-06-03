@@ -140,80 +140,16 @@ int main(void)
    	    	Activar_Parlante(idS);
    	    	while (1)
    	    	{
-   	    		AUDIO_PLAYER_Process(TRUE,idx);
+				MX_USB_HOST_Process();
 
+				if (Appli_state == APPLICATION_READY)
+				{
+					Mount_USB();
+					AUDIO_PLAYER_Start(idx);
+					display_cancion(idx);
+					Activar_Parlante(idS);
 
-   	    		if (uart_cmd_received)
-   	    		{
-   	    		    uart_cmd_received = false;
-
-   	    		    if (uart_rx_byte >= '0' && uart_rx_byte <= '9')
-   	    		    {
-   	    		        int nuevo_idx = uart_rx_byte - '0';
-   	    		        if (nuevo_idx < cantidad_wavs)
-   	    		        {
-   	    		            idx = nuevo_idx;
-   	    		            AudioState = AUDIO_STATE_NEXT;
-   	    		            display_cancion(idx);
-   	    		        }
-   	    		    }
-   	    		}
-
-   	    		if (next_song)
-   	    		{
-   	    			AudioState = AUDIO_STATE_PAUSE;
-   	    			idx = idx + 1;
-   	    			/* Control de indice */
-   	    			if(idx>(cantidad_wavs-1))
-   	    			{
-   	    				idx = 0;
-   	    			}
-   	    			next_song = false;
-   	    			display_cancion(idx);
-   	    			AudioState = AUDIO_STATE_NEXT;
-      	    		};
-
-   	    		if (next_speaker)
-   	    		{
-   	    			idS = idS + 1;
-   	    			/* Control de indice */
-   	    			if(idS>NUM_PARLANTES - 1)
-   	    			{
-   	    				idS = 0;
-   	    			}
-   	    			Activar_Parlante(idS);
-   	    			next_speaker = false;
-   	    			display_cancion(idx);
-   	    			AudioState = AUDIO_STATE_PLAY;
-   	    		}
-
-   	    		if (prev_song)
-   	    		{
-   	    			idx = idx - 1;
-   	    			/* Control de indice */
-   	    			if(idx<0)
-   	    			{
-   	    				idx = cantidad_wavs-1;
-   	    			}
-   	    			AudioState = AUDIO_STATE_PREVIOUS;
-   	    			prev_song = false;
-   	    			display_cancion(idx);
-   	    		};
-
-   	    		if (prev_speaker)
-
-   	    		{
-   	    			idS = idS - 1;
-   	    			/* Control de indice */
-   	    			if(idS<0)
-   	    			{
-   	    				idS = NUM_PARLANTES - 1;
-   	    			}
-   	    			Activar_Parlante(idS);
-   	    			prev_speaker = false;
-   	    			display_cancion(idx);
-   	    		}
-
+					MainLoop();
    	    	}
    	    }
      }
@@ -266,6 +202,89 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void MainLoop(void)
+{
+    while (1)
+    {
+        if (Appli_state != APPLICATION_READY)
+            break;
+
+        AUDIO_PLAYER_Process(TRUE, idx);
+        manejar_uart();
+        manejar_cambio_cancion();
+        manejar_cambio_parlante();
+    }
+}
+
+void manejar_uart(void)
+{
+    if (uart_cmd_received)
+    {
+        uart_cmd_received = false;
+
+        if (uart_rx_byte >= '0' && uart_rx_byte <= '9')
+        {
+            int nuevo_idx = uart_rx_byte - '0';
+            if (nuevo_idx < cantidad_wavs)
+            {
+                idx = nuevo_idx;
+                AudioState = AUDIO_STATE_NEXT;
+                display_cancion(idx);
+            }
+        }
+    }
+}
+
+void manejar_cambio_cancion(void)
+{
+    if (next_song)
+    {
+        AudioState = AUDIO_STATE_PAUSE;
+        idx++;
+        if (idx >= cantidad_wavs)
+            idx = 0;
+        next_song = false;
+        display_cancion(idx);
+        AudioState = AUDIO_STATE_NEXT;
+    }
+
+    if (prev_song)
+    {
+        idx--;
+        if (idx < 0)
+            idx = cantidad_wavs - 1;
+        prev_song = false;
+        AudioState = AUDIO_STATE_PREVIOUS;
+        display_cancion(idx);
+    }
+}
+
+void manejar_cambio_parlante(void)
+{
+    if (next_speaker)
+    {
+        idS++;
+        if (idS >= NUM_PARLANTES)
+            idS = 0;
+        next_speaker = false;
+        Activar_Parlante(idS);
+        display_cancion(idx);
+        AudioState = AUDIO_STATE_PLAY;
+    }
+
+    if (prev_speaker)
+    {
+        idS--;
+        if (idS < 0)
+            idS = NUM_PARLANTES - 1;
+        prev_speaker = false;
+        Activar_Parlante(idS);
+        display_cancion(idx);
+        AudioState = AUDIO_STATE_PLAY;
+    }
+}
+
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     if (huart->Instance == USART1)  // Cambiá esto si usás otro UART
@@ -276,7 +295,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         HAL_UART_Receive_IT(&huart1, &uart_rx_byte, 1);
     }
 }
-
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {

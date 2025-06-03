@@ -252,14 +252,16 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
   case AUDIO_STATE_MUTE:
 	AUDIO_OUT_SetVolume(0);
     AudioState = AUDIO_STATE_PLAY;
+    break;
 
   case AUDIO_STATE_SET_VOLUME:
 	AUDIO_OUT_SetVolume(uwVolume);
     AudioState = AUDIO_STATE_PLAY;
+    break;
 
-  case AUDIO_STATE_WAIT:
-  case AUDIO_STATE_IDLE:
-  case AUDIO_STATE_INIT:    
+  case AUDIO_STATE_WAIT:break;
+  case AUDIO_STATE_IDLE:break;
+  case AUDIO_STATE_INIT:break;
   default:
     /* Do Nothing */
     break;
