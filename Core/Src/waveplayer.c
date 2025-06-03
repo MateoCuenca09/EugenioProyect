@@ -129,7 +129,7 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Start(uint8_t idx)
     BufferCtl.state = BUFFER_OFFSET_NONE;
     
     /* Get Data from USB Flash Disk */
-    f_lseek(&WavFile, 0);
+    f_lseek(&WavFile, 44);
     
     /* Fill whole buffer at first time */
     if(f_read(&WavFile,&BufferCtl.buff[0],AUDIO_OUT_BUFFER_SIZE,(void *)&bytesread) == FR_OK)
