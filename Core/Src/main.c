@@ -63,6 +63,12 @@ void SystemClock_Config(void);
 void MX_USB_HOST_Process(void);
 
 /* USER CODE BEGIN PFP */
+void MainLoop(void);
+void manejar_uart(void);
+void manejar_cambio_cancion(void);
+void manejar_cambio_parlante(void);
+
+
 extern ApplicationTypeDef Appli_state;
 extern AUDIO_PLAYBACK_StateTypeDef AudioState;
 extern UART_HandleTypeDef huart1;
@@ -140,8 +146,6 @@ int main(void)
    	    	Activar_Parlante(idS);
    	    	while (1)
    	    	{
-				MX_USB_HOST_Process();
-
 				if (Appli_state == APPLICATION_READY)
 				{
 					Mount_USB();
@@ -150,6 +154,7 @@ int main(void)
 					Activar_Parlante(idS);
 
 					MainLoop();
+				}
    	    	}
    	    }
      }
