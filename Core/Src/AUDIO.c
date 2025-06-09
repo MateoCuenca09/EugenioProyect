@@ -323,7 +323,7 @@ uint8_t AUDIO_OUT_Stop(uint32_t Option)
     if(Option == CODEC_PDWN_HW)
     { 
       /* Wait at least 1ms */
-      HAL_Delay(1);
+      HAL_Delay(2);
       
       /* Reset the pin */
       HAL_GPIO_WritePin(AUDIO_RESET_GPIO, AUDIO_RESET_PIN, GPIO_PIN_RESET);
@@ -363,7 +363,7 @@ uint8_t AUDIO_OUT_SetVolume(uint8_t Volume)
 uint8_t AUDIO_OUT_SetMute(uint32_t Cmd)
 { 
   /* Call the Codec Mute function */
-  if(pAudioDrv->SetMute(AUDIO_I2C_ADDRESS, Cmd) != 0)
+  if(pAudioDrv->SetMute(AUDIO_I2C_ADDRESS, AUDIO_MUTE_ON) != 0)
   {
     return AUDIO_ERROR;
   }

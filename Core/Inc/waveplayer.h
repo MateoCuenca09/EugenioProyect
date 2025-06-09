@@ -146,7 +146,7 @@ typedef struct {
 
 AUDIO_ErrorTypeDef AUDIO_PLAYER_Init(void);
 AUDIO_ErrorTypeDef AUDIO_PLAYER_Start(uint8_t idx);
-AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx);
+AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop);
 AUDIO_ErrorTypeDef AUDIO_PLAYER_Stop(void);
 //void AUDIO_PlaybackProbeKey(JOYState_TypeDef state);
 

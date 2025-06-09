@@ -112,7 +112,7 @@ uint8_t PlayerInit(uint32_t AudioFreq)
   */ 
 AUDIO_ErrorTypeDef AUDIO_PLAYER_Start(uint8_t idx)
 {
-  UINT bytesread;
+	UINT bytesread;
 
   f_close(&WavFile);
   if(AUDIO_GetWavObjectNumber() > idx)
@@ -129,7 +129,7 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Start(uint8_t idx)
     BufferCtl.state = BUFFER_OFFSET_NONE;
     
     /* Get Data from USB Flash Disk */
-    f_lseek(&WavFile, 0);
+    f_lseek(&WavFile, 44);
     
     /* Fill whole buffer at first time */
     if(f_read(&WavFile,&BufferCtl.buff[0],AUDIO_OUT_BUFFER_SIZE,(void *)&bytesread) == FR_OK)
@@ -151,7 +151,7 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Start(uint8_t idx)
   * @param  None
   * @retval Audio error
   */
-AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
+AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop)
 {
   uint32_t bytesread;
   AUDIO_ErrorTypeDef audio_error = AUDIO_ERROR_NONE;
@@ -162,7 +162,7 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
     if(BufferCtl.fptr >= WaveFormat.FileSize)
     {
       AUDIO_OUT_Stop(CODEC_PDWN_SW);
-      AUDIO_PLAYER_Start(idx);
+      AudioState = AUDIO_STATE_NEXT;
     }
     
     if(BufferCtl.state == BUFFER_OFFSET_HALF)
@@ -196,6 +196,8 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
     break;
     
   case AUDIO_STATE_NEXT:
+	uint32_t Cmd =0;
+	AUDIO_OUT_SetMute(Cmd);
     if(++FilePos >= AUDIO_GetWavObjectNumber())
     {
     	if (isLoop)
@@ -207,9 +209,9 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
     		AudioState =AUDIO_STATE_STOP;
     	}
     }
+
     AUDIO_OUT_Stop(CODEC_PDWN_SW);
     AUDIO_PLAYER_Start(FilePos);
-	AUDIO_OUT_SetVolume(uwVolume);
     break;    
     
   case AUDIO_STATE_PREVIOUS:
@@ -217,7 +219,7 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
     {
       FilePos = AUDIO_GetWavObjectNumber() - 1;
     }
-    AUDIO_OUT_Stop(CODEC_PDWN_SW);
+    AUDIO_OUT_Stop(CODEC_PDWN_HW);
     AUDIO_PLAYER_Start(FilePos);
     break;   
     
@@ -249,14 +251,6 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
     AudioState = AUDIO_STATE_PLAY;
     break;
     
-  case AUDIO_STATE_MUTE:
-	AUDIO_OUT_SetVolume(0);
-    AudioState = AUDIO_STATE_PLAY;
-
-  case AUDIO_STATE_SET_VOLUME:
-	AUDIO_OUT_SetVolume(uwVolume);
-    AudioState = AUDIO_STATE_PLAY;
-
   case AUDIO_STATE_WAIT:
   case AUDIO_STATE_IDLE:
   case AUDIO_STATE_INIT:    
@@ -266,6 +260,7 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
   }
   return audio_error;
 }
+
 
 /**
   * @brief  Stops Audio streaming.

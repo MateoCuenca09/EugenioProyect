@@ -114,11 +114,11 @@ int main(void)
   MX_I2S3_Init();
   MX_FATFS_Init();
   MX_USB_HOST_Init();
-  MX_USART1_UART_Init();
+  //MX_USART1_UART_Init();
   //MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
   //SSD1306_Init();
-  HAL_UART_Receive_IT(&huart1, &uart_rx_byte, 1);
+  //HAL_UART_Receive_IT(&huart1, &uart_rx_byte, 1);
 
   /* USER CODE END 2 */
 
@@ -140,28 +140,12 @@ int main(void)
    	    	Activar_Parlante(idS);
    	    	while (1)
    	    	{
-   	    		AUDIO_PLAYER_Process(TRUE,idx);
-
-
-   	    		if (uart_cmd_received)
-   	    		{
-   	    		    uart_cmd_received = false;
-
-   	    		    if (uart_rx_byte >= '0' && uart_rx_byte <= '9')
-   	    		    {
-   	    		        int nuevo_idx = uart_rx_byte - '0';
-   	    		        if (nuevo_idx < cantidad_wavs)
-   	    		        {
-   	    		            idx = nuevo_idx;
-   	    		            AudioState = AUDIO_STATE_NEXT;
-   	    		            //display_cancion(idx);
-   	    		        }
-   	    		    }
-   	    		}
+   	    		AUDIO_PLAYER_Process(FALSE);
 
    	    		if (next_song)
    	    		{
-   	    			AudioState = AUDIO_STATE_PAUSE;
+   	    			HAL_Delay(20);
+   	    			//AudioState = AUDIO_STATE_PAUSE;
    	    			idx = idx + 1;
    	    			/* Control de indice */
    	    			if(idx>(cantidad_wavs-1))
@@ -171,7 +155,7 @@ int main(void)
    	    			next_song = false;
    	    			//display_cancion(idx);
    	    			AudioState = AUDIO_STATE_NEXT;
-      	    		};
+      	    	};
 
    	    		if (next_speaker)
    	    		{
