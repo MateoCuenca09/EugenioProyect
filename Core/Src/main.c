@@ -115,9 +115,9 @@ int main(void)
   MX_FATFS_Init();
   MX_USB_HOST_Init();
   MX_USART1_UART_Init();
-  MX_I2C3_Init();
+  //MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
-  SSD1306_Init();
+  //SSD1306_Init();
   HAL_UART_Receive_IT(&huart1, &uart_rx_byte, 1);
 
   /* USER CODE END 2 */
@@ -136,7 +136,7 @@ int main(void)
    	    {
    	    	Mount_USB();
    	    	AUDIO_PLAYER_Start(idx);
-   	    	display_cancion(idx);
+   	    	//display_cancion(idx);
    	    	Activar_Parlante(idS);
    	    	while (1)
    	    	{
@@ -154,7 +154,7 @@ int main(void)
    	    		        {
    	    		            idx = nuevo_idx;
    	    		            AudioState = AUDIO_STATE_NEXT;
-   	    		            display_cancion(idx);
+   	    		            //display_cancion(idx);
    	    		        }
    	    		    }
    	    		}
@@ -169,7 +169,7 @@ int main(void)
    	    				idx = 0;
    	    			}
    	    			next_song = false;
-   	    			display_cancion(idx);
+   	    			//display_cancion(idx);
    	    			AudioState = AUDIO_STATE_NEXT;
       	    		};
 
@@ -183,7 +183,7 @@ int main(void)
    	    			}
    	    			Activar_Parlante(idS);
    	    			next_speaker = false;
-   	    			display_cancion(idx);
+   	    			//display_cancion(idx);
    	    			AudioState = AUDIO_STATE_PLAY;
    	    		}
 
@@ -197,7 +197,7 @@ int main(void)
    	    			}
    	    			AudioState = AUDIO_STATE_PREVIOUS;
    	    			prev_song = false;
-   	    			display_cancion(idx);
+   	    			//display_cancion(idx);
    	    		};
 
    	    		if (prev_speaker)
@@ -211,7 +211,7 @@ int main(void)
    	    			}
    	    			Activar_Parlante(idS);
    	    			prev_speaker = false;
-   	    			display_cancion(idx);
+   	    			//display_cancion(idx);
    	    		}
 
    	    	}
