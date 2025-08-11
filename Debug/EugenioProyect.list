@@ -3270,8 +3270,8 @@ void MX_GPIO_Init(void)
  80015f8:	f001 fc48 	bl	8002e8c <HAL_GPIO_Init>
 
   /*Configure GPIO pins : PDPin PDPin PDPin PDPin */
-  GPIO_InitStruct.Pin = PD9_Pin|PD11_Pin|PD13_Pin|PD15_Pin;
- 80015fc:	f44f 432a 	mov.w	r3, #43520	@ 0xaa00
+  GPIO_InitStruct.Pin = PD9_Pin|PD11_Pin|PD13_Pin|PD14_Pin;
+ 80015fc:	f44f 43d4 	mov.w	r3, #27136	@ 0x6a00
  8001600:	617b      	str	r3, [r7, #20]
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
  8001602:	f44f 1388 	mov.w	r3, #1114112	@ 0x110000
@@ -4277,9 +4277,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
  8001c0e:	4603      	mov	r3, r0
  8001c10:	80fb      	strh	r3, [r7, #6]
 
-	if (GPIO_Pin == PD15_Pin)
+	if (GPIO_Pin == PD14_Pin)
  8001c12:	88fb      	ldrh	r3, [r7, #6]
- 8001c14:	f5b3 4f00 	cmp.w	r3, #32768	@ 0x8000
+ 8001c14:	f5b3 4f80 	cmp.w	r3, #16384	@ 0x4000
  8001c18:	d102      	bne.n	8001c20 <HAL_GPIO_EXTI_Callback+0x18>
 	{
 		next_song = true;
@@ -4749,8 +4749,8 @@ void EXTI15_10_IRQHandler(void)
   HAL_GPIO_EXTI_IRQHandler(PD13_Pin);
  8001ddc:	f44f 5000 	mov.w	r0, #8192	@ 0x2000
  8001de0:	f001 fad6 	bl	8003390 <HAL_GPIO_EXTI_IRQHandler>
-  HAL_GPIO_EXTI_IRQHandler(PD15_Pin);
- 8001de4:	f44f 4000 	mov.w	r0, #32768	@ 0x8000
+  HAL_GPIO_EXTI_IRQHandler(PD14_Pin);
+ 8001de4:	f44f 4080 	mov.w	r0, #16384	@ 0x4000
  8001de8:	f001 fad2 	bl	8003390 <HAL_GPIO_EXTI_IRQHandler>
   /* USER CODE BEGIN EXTI15_10_IRQn 1 */
 

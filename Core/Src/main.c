@@ -263,7 +263,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 
-	if (GPIO_Pin == PD15_Pin)
+	if (GPIO_Pin == PD14_Pin)
 	{
 		next_song = true;
 	}
