@@ -310,9 +310,7 @@ uint8_t AUDIO_OUT_Resume(void)
   */
 uint8_t AUDIO_OUT_Stop(uint32_t Option)
 {
-  /* Call DMA Stop to disable DMA stream before stopping codec */
-  HAL_I2S_DMAStop(&hAudioOutI2s);
-  
+
   /* Call Audio Codec Stop function */
   if(pAudioDrv->Stop(AUDIO_I2C_ADDRESS, Option) != 0)
   {
@@ -329,6 +327,9 @@ uint8_t AUDIO_OUT_Stop(uint32_t Option)
       HAL_GPIO_WritePin(AUDIO_RESET_GPIO, AUDIO_RESET_PIN, GPIO_PIN_RESET);
     }
     
+    /* Call DMA Stop to disable DMA stream before stopping codec */
+    HAL_I2S_DMAStop(&hAudioOutI2s);
+
     /* Return AUDIO_OK when all operations are correctly done */
     return AUDIO_OK;
   }

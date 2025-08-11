@@ -219,6 +219,7 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop)
     {
       FilePos = AUDIO_GetWavObjectNumber() - 1;
     }
+    AUDIO_OUT_SetMute(CODEC_PDWN_HW);
     AUDIO_OUT_Stop(CODEC_PDWN_HW);
     AUDIO_PLAYER_Start(FilePos);
     break;   
