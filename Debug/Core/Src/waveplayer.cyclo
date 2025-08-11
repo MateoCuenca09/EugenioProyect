@@ -1,6 +1,6 @@
 ../Core/Src/waveplayer.c:95:9:PlayerInit	2
 ../Core/Src/waveplayer.c:113:20:AUDIO_PLAYER_Start	4
-../Core/Src/waveplayer.c:154:20:AUDIO_PLAYER_Process	19
-../Core/Src/waveplayer.c:271:20:AUDIO_PLAYER_Stop	1
-../Core/Src/waveplayer.c:286:6:AUDIO_OUT_TransferComplete_CallBack	2
-../Core/Src/waveplayer.c:299:6:AUDIO_OUT_HalfTransfer_CallBack	2
+../Core/Src/waveplayer.c:154:20:AUDIO_PLAYER_Process	18
+../Core/Src/waveplayer.c:260:20:AUDIO_PLAYER_Stop	1
+../Core/Src/waveplayer.c:275:6:AUDIO_OUT_TransferComplete_CallBack	2
+../Core/Src/waveplayer.c:288:6:AUDIO_OUT_HalfTransfer_CallBack	2

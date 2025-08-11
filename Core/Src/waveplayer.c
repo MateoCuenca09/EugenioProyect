@@ -196,30 +196,19 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop)
     break;
     
   case AUDIO_STATE_NEXT:
-	uint32_t Cmd =0;
-	AUDIO_OUT_SetMute(Cmd);
-    if(++FilePos >= AUDIO_GetWavObjectNumber())
-    {
-    	if (isLoop)
-    	{
-    		FilePos = 0;
-    	}
-    	else
-    	{
-    		AudioState =AUDIO_STATE_STOP;
-    	}
-    }
+      if(++FilePos >= AUDIO_GetWavObjectNumber())
+      {
+          FilePos = 0;
+      }
+      AUDIO_OUT_Stop(CODEC_PDWN_HW);
+      AUDIO_PLAYER_Start(FilePos);
+      break;
 
-    AUDIO_OUT_Stop(CODEC_PDWN_SW);
-    AUDIO_PLAYER_Start(FilePos);
-    break;    
-    
   case AUDIO_STATE_PREVIOUS:
     if(--FilePos < 0)
     {
       FilePos = AUDIO_GetWavObjectNumber() - 1;
     }
-    AUDIO_OUT_SetMute(CODEC_PDWN_HW);
     AUDIO_OUT_Stop(CODEC_PDWN_HW);
     AUDIO_PLAYER_Start(FilePos);
     break;   

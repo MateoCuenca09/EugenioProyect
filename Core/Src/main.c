@@ -144,17 +144,15 @@ int main(void)
 
    	    		if (next_song)
    	    		{
-   	    			HAL_Delay(20);
-   	    			//AudioState = AUDIO_STATE_PAUSE;
-   	    			idx = idx + 1;
-   	    			/* Control de indice */
-   	    			if(idx>(cantidad_wavs-1))
-   	    			{
-   	    				idx = 0;
-   	    			}
-   	    			next_song = false;
-   	    			//display_cancion(idx);
-   	    			AudioState = AUDIO_STATE_NEXT;
+   	    		    idx = idx + 1;
+   	    		    /* Control de indice */
+   	    		    if (idx >= cantidad_wavs)
+   	    		    {
+   	    		        idx = 0;
+   	    		    }
+   	    		    AudioState = AUDIO_STATE_NEXT;
+   	    		    next_song = false;
+   	    		    //display_cancion(idx);
       	    	};
 
    	    		if (next_speaker)
