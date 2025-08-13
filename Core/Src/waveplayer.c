@@ -95,7 +95,7 @@ FIL WavFile;
 uint8_t PlayerInit(uint32_t AudioFreq)
 {
 	/* Initialize the Audio codec and all related peripherals (I2S, I2C, IOExpander, IOs...) */
-	if(AUDIO_OUT_Init(OUTPUT_DEVICE_BOTH, uwVolume, AudioFreq) != 0)
+	if(AUDIO_OUT_Init(OUTPUT_DEVICE_HEADPHONE, uwVolume, AudioFreq) != 0)
 	{
 		return 1;
 	}

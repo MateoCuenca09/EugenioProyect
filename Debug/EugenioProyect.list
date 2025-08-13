@@ -4959,13 +4959,13 @@ uint8_t PlayerInit(uint32_t AudioFreq)
  8001ec8:	af00      	add	r7, sp, #0
  8001eca:	6078      	str	r0, [r7, #4]
 	/* Initialize the Audio codec and all related peripherals (I2S, I2C, IOExpander, IOs...) */
-	if(AUDIO_OUT_Init(OUTPUT_DEVICE_BOTH, uwVolume, AudioFreq) != 0)
+	if(AUDIO_OUT_Init(OUTPUT_DEVICE_HEADPHONE, uwVolume, AudioFreq) != 0)
  8001ecc:	4b08      	ldr	r3, [pc, #32]	@ (8001ef0 <PlayerInit+0x2c>)
  8001ece:	681b      	ldr	r3, [r3, #0]
  8001ed0:	b2db      	uxtb	r3, r3
  8001ed2:	687a      	ldr	r2, [r7, #4]
  8001ed4:	4619      	mov	r1, r3
- 8001ed6:	2003      	movs	r0, #3
+ 8001ed6:	2002      	movs	r0, #2
  8001ed8:	f7fe fb14 	bl	8000504 <AUDIO_OUT_Init>
  8001edc:	4603      	mov	r3, r0
  8001ede:	2b00      	cmp	r3, #0
