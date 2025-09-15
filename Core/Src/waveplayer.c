@@ -162,9 +162,15 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop)
     if(BufferCtl.fptr >= WaveFormat.FileSize)
     {
       AUDIO_OUT_Stop(CODEC_PDWN_SW);
-      AudioState = AUDIO_STATE_NEXT;
+      if (isLoop) {
+        // Reproducir el mismo archivo nuevamente
+        AUDIO_PLAYER_Start(FilePos);
+        AudioState = AUDIO_STATE_PLAY;
+      } else {
+        AudioState = AUDIO_STATE_NEXT;
+      }
     }
-    
+
     if(BufferCtl.state == BUFFER_OFFSET_HALF)
     {
       if(f_read(&WavFile, &BufferCtl.buff[0], AUDIO_OUT_BUFFER_SIZE/2, (void *)&bytesread) != FR_OK)
@@ -175,7 +181,7 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop)
       BufferCtl.state = BUFFER_OFFSET_NONE;
       BufferCtl.fptr += bytesread; 
     }
-    
+
     if(BufferCtl.state == BUFFER_OFFSET_FULL)
     {
       if(f_read(&WavFile, &BufferCtl.buff[AUDIO_OUT_BUFFER_SIZE /2], AUDIO_OUT_BUFFER_SIZE/2, (void *)&bytesread) != FR_OK)
@@ -183,18 +189,18 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop)
         AUDIO_OUT_Stop(CODEC_PDWN_SW);
         return AUDIO_ERROR_IO;       
       } 
- 
+
       BufferCtl.state = BUFFER_OFFSET_NONE;
       BufferCtl.fptr += bytesread; 
     }
     break;
-    
+
   case AUDIO_STATE_STOP:
     AUDIO_OUT_Stop(CODEC_PDWN_SW);
     AudioState = AUDIO_STATE_IDLE; 
     audio_error = AUDIO_ERROR_IO;
     break;
-    
+
   case AUDIO_STATE_NEXT:
       if(++FilePos >= AUDIO_GetWavObjectNumber())
       {
