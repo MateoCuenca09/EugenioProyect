@@ -77,7 +77,7 @@ bool next_song, prev_song, next_speaker, prev_speaker = false;
 int8_t idx = 0; /* Indice de archivos */
 int8_t idS = 0; /* Indice de Parlantes */
 
-uint8_t cantidad_wavs = 3; /* Cantidad de archivos a reproducir */
+uint8_t cantidad_wavs = 12; /* Cantidad de archivos a reproducir */
 
 
 /* USER CODE END 0 */
@@ -114,11 +114,11 @@ int main(void)
   MX_I2S3_Init();
   MX_FATFS_Init();
   MX_USB_HOST_Init();
-  //MX_USART1_UART_Init();
+  MX_USART1_UART_Init();
   MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
   display_Init();
-  //HAL_UART_Receive_IT(&huart1, &uart_rx_byte, 1);
+  HAL_UART_Receive_IT(&huart1, &uart_rx_byte, 1);
 
   /* USER CODE END 2 */
 
@@ -140,7 +140,7 @@ int main(void)
    	    	Activar_Parlante(idS);
    	    	while (1)
    	    	{
-   	    		AUDIO_PLAYER_Process(FALSE);
+   	    		AUDIO_PLAYER_Process(TRUE);
 
    	    		if (next_song)
    	    		{
@@ -152,7 +152,7 @@ int main(void)
    	    		    }
    	    		    AudioState = AUDIO_STATE_NEXT;
    	    		    next_song = false;
-   	    		    //display_cancion(idx);
+   	    		    display_cancion(idx);
       	    	};
 
    	    		if (next_speaker)
@@ -194,6 +194,16 @@ int main(void)
    	    			Activar_Parlante(idS);
    	    			prev_speaker = false;
    	    			display_cancion(idx);
+   	    		}
+
+   	    		if(uart_cmd_received)
+   	    		{
+   	    			AUDIO_PLAYER_Stop();
+   	    			//do something
+   	    			Activar_Parlante(uart_rx_byte);
+   	    			display_cancion(uart_rx_byte);
+   	    			AUDIO_PLAYER_Start(uart_rx_byte);
+   	    			uart_cmd_received = false;
    	    		}
 
    	    	}

@@ -103,6 +103,12 @@ void display_cancion(int idx)
 		SSD1306_Puts("* Cancion", &Font_7x10, WHITE);
 		SSD1306_UpdateScreen();
 
+    default:   // <---- este es el caso por defecto
+        SSD1306_Clear();
+        SSD1306_GotoXY(20,25);
+        SSD1306_Puts("Opcion NA", &Font_7x10, WHITE);
+        SSD1306_UpdateScreen();
+        break;
 	}
 
 }
