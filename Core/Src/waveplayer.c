@@ -151,7 +151,7 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Start(uint8_t idx)
   * @param  None
   * @retval Audio error
   */
-AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop)
+AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(uint8_t idx, bool isLoop)
 {
   uint32_t bytesread;
   AUDIO_ErrorTypeDef audio_error = AUDIO_ERROR_NONE;
@@ -161,12 +161,12 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop)
   case AUDIO_STATE_PLAY:
     if(BufferCtl.fptr >= WaveFormat.FileSize)
     {
-      AUDIO_OUT_Stop(CODEC_PDWN_SW);
       if (isLoop) {
-        // Reproducir el mismo archivo nuevamente
+        AUDIO_OUT_Stop(CODEC_PDWN_HW);
         AUDIO_PLAYER_Start(FilePos);
-        AudioState = AUDIO_STATE_PLAY;
-      } else {
+      } 
+      else {
+        AUDIO_OUT_Stop(CODEC_PDWN_SW);
         AudioState = AUDIO_STATE_NEXT;
       }
     }
@@ -178,8 +178,24 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop)
         AUDIO_OUT_Stop(CODEC_PDWN_SW);
         return AUDIO_ERROR_IO;       
       } 
+      
       BufferCtl.state = BUFFER_OFFSET_NONE;
       BufferCtl.fptr += bytesread; 
+      
+      // Si no se leyeron bytes (final del archivo)
+      if(bytesread == 0)
+      {
+        if (isLoop) {
+          {
+            AUDIO_OUT_Stop(CODEC_PDWN_HW);
+            AUDIO_PLAYER_Start(FilePos);
+          }
+        } else {
+          // Si no es loop, pasar al siguiente archivo
+          AUDIO_OUT_Stop(CODEC_PDWN_SW);
+          AudioState = AUDIO_STATE_NEXT;
+        }
+      }
     }
 
     if(BufferCtl.state == BUFFER_OFFSET_FULL)
@@ -192,6 +208,19 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop)
 
       BufferCtl.state = BUFFER_OFFSET_NONE;
       BufferCtl.fptr += bytesread; 
+      
+      // Si no se leyeron bytes (final del archivo)
+      if(bytesread == 0)
+      {
+        if (isLoop) {
+          AUDIO_OUT_Stop(CODEC_PDWN_HW);
+          AUDIO_PLAYER_Start(FilePos);
+        } else {
+          // Si no es loop, pasar al siguiente archivo
+          AUDIO_OUT_Stop(CODEC_PDWN_SW);
+          AudioState = AUDIO_STATE_NEXT;
+        }
+      }
     }
     break;
 

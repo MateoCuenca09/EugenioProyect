@@ -74,7 +74,7 @@ volatile bool uart_cmd_received = false;
 /* USER CODE BEGIN 0 */
 int IsFinished = 0;
 bool next_song, prev_song, next_speaker, prev_speaker = false;
-int8_t idx = 0; /* Indice de archivos */
+uint8_t idx = 0; /* Indice de archivos */
 int8_t idS = 0; /* Indice de Parlantes */
 
 uint8_t cantidad_wavs = 12; /* Cantidad de archivos a reproducir */
@@ -140,7 +140,7 @@ int main(void)
    	    	Activar_Parlante(idS);
    	    	while (1)
    	    	{
-   	    		AUDIO_PLAYER_Process(TRUE);
+   	    		AUDIO_PLAYER_Process(idx, TRUE);
 
    	    		if (next_song)
    	    		{
