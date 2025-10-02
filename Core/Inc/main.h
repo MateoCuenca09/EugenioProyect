@@ -79,9 +79,9 @@ void Error_Handler(void);
 #define PD13_Pin GPIO_PIN_13
 #define PD13_GPIO_Port GPIOD
 #define PD13_EXTI_IRQn EXTI15_10_IRQn
-#define PD15_Pin GPIO_PIN_15
-#define PD15_GPIO_Port GPIOD
-#define PD15_EXTI_IRQn EXTI15_10_IRQn
+#define PD14_Pin GPIO_PIN_14
+#define PD14_GPIO_Port GPIOD
+#define PD14_EXTI_IRQn EXTI15_10_IRQn
 
 /* USER CODE BEGIN Private defines */
 

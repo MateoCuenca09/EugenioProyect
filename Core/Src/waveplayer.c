@@ -68,7 +68,7 @@
 #include "File_Handling.h"
 #include "AUDIO.h"
 
-static uint32_t uwVolume = 55;  // between 0 to 100
+static uint32_t uwVolume = 80;  // between 0 to 100
 
 
 /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NO CHANGES AFTER THIS <<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
@@ -95,7 +95,7 @@ FIL WavFile;
 uint8_t PlayerInit(uint32_t AudioFreq)
 {
 	/* Initialize the Audio codec and all related peripherals (I2S, I2C, IOExpander, IOs...) */
-	if(AUDIO_OUT_Init(OUTPUT_DEVICE_BOTH, uwVolume, AudioFreq) != 0)
+	if(AUDIO_OUT_Init(OUTPUT_DEVICE_HEADPHONE, uwVolume, AudioFreq) != 0)
 	{
 		return 1;
 	}
@@ -112,7 +112,7 @@ uint8_t PlayerInit(uint32_t AudioFreq)
   */ 
 AUDIO_ErrorTypeDef AUDIO_PLAYER_Start(uint8_t idx)
 {
-  UINT bytesread;
+	UINT bytesread;
 
   f_close(&WavFile);
   if(AUDIO_GetWavObjectNumber() > idx)
@@ -129,7 +129,7 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Start(uint8_t idx)
     BufferCtl.state = BUFFER_OFFSET_NONE;
     
     /* Get Data from USB Flash Disk */
-    f_lseek(&WavFile, 0);
+    f_lseek(&WavFile, 44);
     
     /* Fill whole buffer at first time */
     if(f_read(&WavFile,&BufferCtl.buff[0],AUDIO_OUT_BUFFER_SIZE,(void *)&bytesread) == FR_OK)
@@ -151,7 +151,7 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Start(uint8_t idx)
   * @param  None
   * @retval Audio error
   */
-AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
+AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(uint8_t idx, bool isLoop)
 {
   uint32_t bytesread;
   AUDIO_ErrorTypeDef audio_error = AUDIO_ERROR_NONE;
@@ -161,10 +161,16 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
   case AUDIO_STATE_PLAY:
     if(BufferCtl.fptr >= WaveFormat.FileSize)
     {
-      AUDIO_OUT_Stop(CODEC_PDWN_SW);
-      AUDIO_PLAYER_Start(idx);
+      if (isLoop) {
+        AUDIO_OUT_Stop(CODEC_PDWN_HW);
+        AUDIO_PLAYER_Start(FilePos);
+      } 
+      else {
+        AUDIO_OUT_Stop(CODEC_PDWN_SW);
+        AudioState = AUDIO_STATE_NEXT;
+      }
     }
-    
+
     if(BufferCtl.state == BUFFER_OFFSET_HALF)
     {
       if(f_read(&WavFile, &BufferCtl.buff[0], AUDIO_OUT_BUFFER_SIZE/2, (void *)&bytesread) != FR_OK)
@@ -172,10 +178,26 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
         AUDIO_OUT_Stop(CODEC_PDWN_SW);
         return AUDIO_ERROR_IO;       
       } 
+      
       BufferCtl.state = BUFFER_OFFSET_NONE;
       BufferCtl.fptr += bytesread; 
+      
+      // Si no se leyeron bytes (final del archivo)
+      if(bytesread == 0)
+      {
+        if (isLoop) {
+          {
+            AUDIO_OUT_Stop(CODEC_PDWN_HW);
+            AUDIO_PLAYER_Start(FilePos);
+          }
+        } else {
+          // Si no es loop, pasar al siguiente archivo
+          AUDIO_OUT_Stop(CODEC_PDWN_SW);
+          AudioState = AUDIO_STATE_NEXT;
+        }
+      }
     }
-    
+
     if(BufferCtl.state == BUFFER_OFFSET_FULL)
     {
       if(f_read(&WavFile, &BufferCtl.buff[AUDIO_OUT_BUFFER_SIZE /2], AUDIO_OUT_BUFFER_SIZE/2, (void *)&bytesread) != FR_OK)
@@ -183,41 +205,46 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
         AUDIO_OUT_Stop(CODEC_PDWN_SW);
         return AUDIO_ERROR_IO;       
       } 
- 
+
       BufferCtl.state = BUFFER_OFFSET_NONE;
       BufferCtl.fptr += bytesread; 
+      
+      // Si no se leyeron bytes (final del archivo)
+      if(bytesread == 0)
+      {
+        if (isLoop) {
+          AUDIO_OUT_Stop(CODEC_PDWN_HW);
+          AUDIO_PLAYER_Start(FilePos);
+        } else {
+          // Si no es loop, pasar al siguiente archivo
+          AUDIO_OUT_Stop(CODEC_PDWN_SW);
+          AudioState = AUDIO_STATE_NEXT;
+        }
+      }
     }
     break;
-    
+
   case AUDIO_STATE_STOP:
     AUDIO_OUT_Stop(CODEC_PDWN_SW);
     AudioState = AUDIO_STATE_IDLE; 
     audio_error = AUDIO_ERROR_IO;
     break;
-    
+
   case AUDIO_STATE_NEXT:
-    if(++FilePos >= AUDIO_GetWavObjectNumber())
-    {
-    	if (isLoop)
-    	{
-    		FilePos = 0;
-    	}
-    	else
-    	{
-    		AudioState =AUDIO_STATE_STOP;
-    	}
-    }
-    AUDIO_OUT_Stop(CODEC_PDWN_SW);
-    AUDIO_PLAYER_Start(FilePos);
-	AUDIO_OUT_SetVolume(uwVolume);
-    break;    
-    
+      if(++FilePos >= AUDIO_GetWavObjectNumber())
+      {
+          FilePos = 0;
+      }
+      AUDIO_OUT_Stop(CODEC_PDWN_HW);
+      AUDIO_PLAYER_Start(FilePos);
+      break;
+
   case AUDIO_STATE_PREVIOUS:
     if(--FilePos < 0)
     {
       FilePos = AUDIO_GetWavObjectNumber() - 1;
     }
-    AUDIO_OUT_Stop(CODEC_PDWN_SW);
+    AUDIO_OUT_Stop(CODEC_PDWN_HW);
     AUDIO_PLAYER_Start(FilePos);
     break;   
     
@@ -249,14 +276,6 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
     AudioState = AUDIO_STATE_PLAY;
     break;
     
-  case AUDIO_STATE_MUTE:
-	AUDIO_OUT_SetVolume(0);
-    AudioState = AUDIO_STATE_PLAY;
-
-  case AUDIO_STATE_SET_VOLUME:
-	AUDIO_OUT_SetVolume(uwVolume);
-    AudioState = AUDIO_STATE_PLAY;
-
   case AUDIO_STATE_WAIT:
   case AUDIO_STATE_IDLE:
   case AUDIO_STATE_INIT:    
@@ -266,6 +285,7 @@ AUDIO_ErrorTypeDef AUDIO_PLAYER_Process(bool isLoop, uint8_t idx)
   }
   return audio_error;
 }
+
 
 /**
   * @brief  Stops Audio streaming.

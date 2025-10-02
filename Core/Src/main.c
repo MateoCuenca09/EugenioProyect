@@ -74,10 +74,10 @@ volatile bool uart_cmd_received = false;
 /* USER CODE BEGIN 0 */
 int IsFinished = 0;
 bool next_song, prev_song, next_speaker, prev_speaker = false;
-int8_t idx = 0; /* Indice de archivos */
+uint8_t idx = 0; /* Indice de archivos */
 int8_t idS = 0; /* Indice de Parlantes */
 
-uint8_t cantidad_wavs = 3; /* Cantidad de archivos a reproducir */
+uint8_t cantidad_wavs = 12; /* Cantidad de archivos a reproducir */
 
 
 /* USER CODE END 0 */
@@ -117,7 +117,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
-  SSD1306_Init();
+  display_Init();
   HAL_UART_Receive_IT(&huart1, &uart_rx_byte, 1);
 
   /* USER CODE END 2 */
@@ -140,38 +140,20 @@ int main(void)
    	    	Activar_Parlante(idS);
    	    	while (1)
    	    	{
-   	    		AUDIO_PLAYER_Process(TRUE,idx);
-
-
-   	    		if (uart_cmd_received)
-   	    		{
-   	    		    uart_cmd_received = false;
-
-   	    		    if (uart_rx_byte >= '0' && uart_rx_byte <= '9')
-   	    		    {
-   	    		        int nuevo_idx = uart_rx_byte - '0';
-   	    		        if (nuevo_idx < cantidad_wavs)
-   	    		        {
-   	    		            idx = nuevo_idx;
-   	    		            AudioState = AUDIO_STATE_NEXT;
-   	    		            display_cancion(idx);
-   	    		        }
-   	    		    }
-   	    		}
+   	    		AUDIO_PLAYER_Process(idx, TRUE);
 
    	    		if (next_song)
    	    		{
-   	    			AudioState = AUDIO_STATE_PAUSE;
-   	    			idx = idx + 1;
-   	    			/* Control de indice */
-   	    			if(idx>(cantidad_wavs-1))
-   	    			{
-   	    				idx = 0;
-   	    			}
-   	    			next_song = false;
-   	    			display_cancion(idx);
-   	    			AudioState = AUDIO_STATE_NEXT;
-      	    		};
+   	    		    idx = idx + 1;
+   	    		    /* Control de indice */
+   	    		    if (idx >= cantidad_wavs)
+   	    		    {
+   	    		        idx = 0;
+   	    		    }
+   	    		    AudioState = AUDIO_STATE_NEXT;
+   	    		    next_song = false;
+   	    		    display_cancion(idx);
+      	    	};
 
    	    		if (next_speaker)
    	    		{
@@ -212,6 +194,16 @@ int main(void)
    	    			Activar_Parlante(idS);
    	    			prev_speaker = false;
    	    			display_cancion(idx);
+   	    		}
+
+   	    		if(uart_cmd_received)
+   	    		{
+   	    			AUDIO_PLAYER_Stop();
+   	    			//do something
+   	    			Activar_Parlante(uart_rx_byte);
+   	    			display_cancion(uart_rx_byte);
+   	    			AUDIO_PLAYER_Start(uart_rx_byte);
+   	    			uart_cmd_received = false;
    	    		}
 
    	    	}
@@ -281,7 +273,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 
-	if (GPIO_Pin == PD15_Pin)
+	if (GPIO_Pin == PD14_Pin)
 	{
 		next_song = true;
 	}
